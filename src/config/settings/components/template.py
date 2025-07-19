@@ -1,3 +1,10 @@
+# =============================================================================
+# Django Template Settings
+# -----------------------------------------------------------------------------
+# Configure template engine, directories, and context processors for rendering
+# HTML templates. Adjust DIRS to include custom template paths if needed.
+# =============================================================================
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
