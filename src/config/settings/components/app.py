@@ -27,7 +27,9 @@ DJANGO_CORE_APPS = [
 # -----------------------------------------------------------------------------
 # Add any external Django apps (e.g., REST framework, Celery) here.
 # =============================================================================
-THIRD_PARTY_APPS = []
+THIRD_PARTY_APPS = [
+    "django_structlog",
+]
 
 # =============================================================================
 # Local Applications
