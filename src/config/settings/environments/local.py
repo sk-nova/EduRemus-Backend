@@ -67,9 +67,7 @@ SHELL_PLUS_SQLPARSE_FORMAT_KWARGS = dict(
 # Specify internal IP addresses that are allowed to access the Debug Toolbar.
 # =============================================================================
 INTERNAL_IPS = [
-    # ...
     "127.0.0.1",
-    # ...
 ]
 
 # =============================================================================

@@ -1,11 +1,12 @@
 from pathlib import Path
 
 # =============================================================================
-# Base Directory Configuration
+# Base Directory and Root Directory Configuration
 # -----------------------------------------------------------------------------
 # Defines the root directory of the project using pathlib for path operations.
 # =============================================================================
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent.parent
+ROOT_DIR = BASE_DIR.parent
 
 # =============================================================================
 # URL Configuration
