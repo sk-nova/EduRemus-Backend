@@ -1,1 +1,0 @@
-FROM python:3.13.0-slim-bookworm AS development_build

@@ -1,0 +1,23 @@
+# Install base dependencies
+-r development.txt
+
+# Black code formatter
+black==25.1.0
+
+# Toolbar for django debugging
+django-debug-toolbar==5.2.0
+
+# Useful extension tools for django
+django-extensions==4.1
+
+# Python linting tool
+flake8==7.3.0
+
+# Enhanced python shell
+ipython==9.4.0
+
+# Imported modules sorting tool
+isort==6.0.1
+
+# Triggers hooks before commit the changes to git
+pre-commit==4.2.0
