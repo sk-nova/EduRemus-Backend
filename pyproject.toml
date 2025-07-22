@@ -42,5 +42,4 @@ exclude = '''
 [tool.isort]
 profile = "black"
 line_length = 88
-known_first_party = ["src"]  # Replace with your Django project/module name
 

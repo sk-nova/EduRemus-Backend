@@ -1,75 +1,100 @@
-# =============================================================================
+# ==============================================================================
 # Local Environment Settings
-# =============================================================================
+# ==============================================================================
 
-# =============================================================================
-# Import Installed Apps and Middleware
-# -----------------------------------------------------------------------------
-# Import the base installed apps and middleware configuration from the main
-# components to extend them for local development.
-# =============================================================================
+import socket
+
+import environ
+
+# ------------------------------------------------------------------------------
+# Import shared components for apps and middleware
+# ------------------------------------------------------------------------------
 from config.settings.components.app import INSTALLED_APPS
 from config.settings.components.middleware import MIDDLEWARE
 
-# =============================================================================
-# Import Base Development Settings
-# -----------------------------------------------------------------------------
-# Load all base development settings to inherit common configuration for
-# local development.
-# =============================================================================
-from config.settings.environments.development import *  # noqa
+# ------------------------------------------------------------------------------
+# Load environment variables from .env
+# ------------------------------------------------------------------------------
+env = environ.Env()
+environ.Env.read_env()
 
-# =============================================================================
-# Local Development Specific Apps
-# -----------------------------------------------------------------------------
-# Add any third-party packages or extensions that are useful for local
-# development and debugging.
-# =============================================================================
+# ------------------------------------------------------------------------------
+# Secret Key
+# ------------------------------------------------------------------------------
+# Used for cryptographic signing. Keep secret in production environments.
+# ------------------------------------------------------------------------------
+SECRET_KEY = env("DJANGO_SECRET_KEY")
+
+# ------------------------------------------------------------------------------
+# Debug Mode
+# ------------------------------------------------------------------------------
+# Enables full tracebacks and error messages. Should be disabled in production.
+# ------------------------------------------------------------------------------
+DEBUG = True
+
+# ------------------------------------------------------------------------------
+# Allowed Hosts
+# ------------------------------------------------------------------------------
+# Hosts/domains the Django site can serve.
+# ------------------------------------------------------------------------------
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOST")
+
+# ------------------------------------------------------------------------------
+# Local Development Specific Applications
+# ------------------------------------------------------------------------------
+# Extra apps used for development and debugging.
+# ------------------------------------------------------------------------------
 _LOCAL_DEV_APPS = [
-    "django_extensions",  # Useful extensions for Django development
-    "debug_toolbar",  # Django Debug Toolbar for debugging
+    "django_extensions",  # Extra management commands and tools
+    "debug_toolbar",  # In-browser debug panel
 ]
 
-# =============================================================================
-# Extend Installed Apps
-# -----------------------------------------------------------------------------
-# Append local development apps to the main installed apps list.
-# =============================================================================
+# Extend the shared installed apps
 INSTALLED_APPS += _LOCAL_DEV_APPS
 
-# =============================================================================
-# Middleware Configurations
-# -----------------------------------------------------------------------------
-# Add middleware specific to local development, such as the Debug Toolbar.
-# =============================================================================
-MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
+# ------------------------------------------------------------------------------
+# Middleware
+# ------------------------------------------------------------------------------
+# Add development-specific middleware like debug toolbar.
+# ------------------------------------------------------------------------------
+MIDDLEWARE = ["debug_toolbar.middleware.DebugToolbarMiddleware"] + MIDDLEWARE
 
-# =============================================================================
+# Callback for determining whether to show the toolbar in Docker setups
+SHOW_TOOLBAR_CALLBACK = "debug_toolbar.middleware.show_toolbar_with_docker"
+
+# ------------------------------------------------------------------------------
 # Django Shell Plus Configuration
-# -----------------------------------------------------------------------------
-# Configure Django Shell Plus to use IPython and customize its behavior
-# for local development.
-# =============================================================================
-IPYTHON_ARGUMENTS = []  # Arguments for IPython shell (empty for now)
-IPYTHON_KERNEL_DISPLAY_NAME = "Django Shell-Plus"  # Display name for IPython kernel
-SHELL_PLUS = "ipython"  # Use IPython for shell_plus
-SHELL_PLUS_DONT_LOAD = []  # Do not auto-load any models into shell_plus
-SHELL_PLUS_PRINT_SQL = True  # Print SQL queries in shell_plus
-SHELL_PLUS_PRINT_SQL_TRUNCATE = None  # No truncation for printed SQL queries
-SHELL_PLUS_SQLPARSE_FORMAT_KWARGS = dict(
-    reindent_aligned=True,  # Align SQL reindentation
-    truncate_strings=500,  # Truncate long strings in SQL output
-)
+# ------------------------------------------------------------------------------
+SHELL_PLUS = "ipython"  # Use IPython as backend for shell_plus
+IPYTHON_ARGUMENTS = []
+IPYTHON_KERNEL_DISPLAY_NAME = "Django Shell-Plus"
 
-# =============================================================================
-# Internal IPs for Debug Toolbar
-# -----------------------------------------------------------------------------
-# Specify internal IP addresses that are allowed to access the Debug Toolbar.
-# =============================================================================
+SHELL_PLUS_DONT_LOAD = []  # Models not to preload
+SHELL_PLUS_PRINT_SQL = True
+SHELL_PLUS_PRINT_SQL_TRUNCATE = None  # Do not truncate printed SQL
+SHELL_PLUS_SQLPARSE_FORMAT_KWARGS = {
+    "reindent_aligned": True,
+    "truncate_strings": 500,
+}
+
+# ------------------------------------------------------------------------------
+# Internal IPs (for Debug Toolbar)
+# ------------------------------------------------------------------------------
+# These IPs are allowed to see the debug toolbar.
+# ------------------------------------------------------------------------------
 INTERNAL_IPS = [
     "127.0.0.1",
+    "0.0.0.0",
 ]
 
-# =============================================================================
+# Add Docker internal host IPs if available
+try:
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS += [ip[: ip.rfind(".")] + ".1" for ip in ips]
+except Exception:
+    # Fail silently if unable to resolve Docker IPs
+    pass
+
+# ==============================================================================
 # End of Local Environment Settings
-# =============================================================================
+# ==============================================================================

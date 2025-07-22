@@ -1,3 +1,0 @@
--r base.txt
-
-werkzeug==3.1.3

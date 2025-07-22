@@ -1,10 +1,10 @@
 from os import environ
 
 # Import split_settings tools for modular settings management
-from split_settings.tools import include, optional
+from split_settings.tools import include
 
-# Get the current environment (e.g., 'development', 'production') from environment variables
-_ENV = environ.get("DJANGO_ENV")
+# Get the current environment (e.g., 'local', 'production') from environment variables
+_ENV = environ.get("DJANGO_ENV", default="local")
 
 # List of base settings components to include
 _base_settings = [
@@ -19,7 +19,6 @@ _base_settings = [
     "components/logging.py",  # Logging configuration
     "components/third_party.py",  # Third-party packages settings
     f"environments/{_ENV}.py",  # Environment-specific settings
-    optional("environments/local.py"),  # Optional local overrides
 ]
 
 # Include all settings components
